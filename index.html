@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AdGuard | Checkout</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#f8f9fa;color:#2c3e50;line-height:1.6}
+
+    .header{background:#fff;padding:1rem 0;border-bottom:1px solid #e9ecef;box-shadow:0 2px 4px rgba(0,0,0,.04)}
+    .header-content{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 2rem}
+    .logo{display:flex;align-items:center;gap:.75rem}
+
+    .auth-link{color:#007bff;text-decoration:none;font-size:.9rem}
+    .auth-link:hover{text-decoration:underline}
+
+    .main-container{max-width:1200px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 350px;gap:3rem;align-items:start}
+    .checkout-form{display:flex;flex-direction:column;gap:2rem}
+
+    .legal-note{font-size:.9rem;color:#495057}
+    .legal-note a{color:#2e7d32;text-underline-offset:2px}
+
+    .form-section{background:#fff;border-radius:8px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid #e9ecef}
+    .section-header{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem}
+    .section-number{background:#68BC71;color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700}
+    .section-title{font-size:1.1rem;font-weight:600;color:#2c3e50}
+
+    .form-group{margin-bottom:1rem}
+    .form-label{display:block;margin-bottom:.5rem;font-weight:500;color:#495057;font-size:.9rem}
+    .form-input{width:100%;padding:.75rem;border:2px solid #e9ecef;border-radius:4px;background:#fff;color:#495057;font-size:.9rem;transition:border-color .2s ease}
+    .form-input:focus{outline:none;border-color:#68BC71}
+    .form-input::placeholder{color:#adb5bd}
+
+    .coupon-section .form-input{border-radius:4px 0 0 4px}
+    .coupon-button{padding:.75rem 1.5rem;background:#68BC71;color:#fff;border:none;border-radius:0 4px 4px 0;cursor:pointer;font-weight:500;transition:background-color .2s ease}
+    .coupon-button:hover{background:#5aa863}
+    .coupon-input-group{display:flex}
+
+    .additional-services{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .service-card{border:2px solid #e9ecef;border-radius:8px;padding:1.5rem;background:#f8f9fa;cursor:pointer;transition:all .2s ease;position:relative}
+    .service-card:hover{border-color:#68BC71;transform:translateY(-2px);box-shadow:0 4px 12px rgba(104,188,113,.15)}
+    .service-card.selected{border-color:#68BC71;background:rgba(104,188,113,.05)}
+    .service-icon{margin-bottom:.5rem}
+    .service-name{font-weight:600;font-size:.95rem;color:#2c3e50;margin-bottom:.5rem}
+    .service-description{font-size:.8rem;color:#6c757d;margin-bottom:1rem;line-height:1.4}
+    .service-price{font-weight:600;color:#68BC71;font-size:.9rem}
+    .add-button{position:absolute;top:1rem;right:1rem;background:#fff;border:2px solid #e9ecef;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#68BC71;cursor:pointer;transition:all .2s ease}
+    .service-card.selected .add-button{background:#68BC71;border-color:#68BC71;color:#fff}
+
+    .payment-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+    .payment-method{border:2px solid #e9ecef;border-radius:8px;padding:1rem;text-align:center;cursor:pointer;background:#fff;transition:all .2s ease;position:relative}
+    .payment-method:hover,.payment-method.active{border-color:#68BC71}
+    .payment-method.active::after{content:'✓';position:absolute;top:.5rem;right:.5rem;background:#68BC71;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+    .payment-icon{font-size:1.5rem;margin-bottom:.5rem;display:block}
+    .payment-name{font-size:.85rem;color:#2c3e50;font-weight:600}
+    .payment-sub{font-size:.75rem;color:#6c757d}
+
+    .card-form{display:grid;gap:1rem;margin-top:1.5rem}
+    .card-row{display:grid;grid-template-columns:2fr 1fr;gap:1rem}
+
+    .checkout-button{
+      width:100%;
+      background:#68BC71;
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      padding:1rem 2rem;
+      font-size:1.1rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .3s ease;
+      box-shadow:0 4px 12px rgba(104,188,113,.25);
+      margin-top:1rem;
+    }
+    .checkout-button:hover{
+      background:#5aa863;
+      transform:translateY(-2px);
+      box-shadow:0 6px 16px rgba(104,188,113,.35);
+    }
+    .checkout-button:active{
+      transform:translateY(0);
+      box-shadow:0 2px 8px rgba(104,188,113,.25);
+    }
+
+    .order-summary{background:#fff;border-radius:8px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid #e9ecef;height:fit-content;position:sticky;top:2rem}
+    .summary-title{font-size:1.1rem;font-weight:600;color:#2c3e50;margin-bottom:1.5rem}
+    .plan-info{background:rgba(104,188,113,.1);border:1px solid rgba(104,188,113,.2);border-radius:8px;padding:1rem;margin-bottom:1.5rem;position:relative}
+    .plan-badge{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+    .plan-icon{background:#68BC71;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.8rem}
+    .plan-name{font-weight:600;color:#2c3e50}
+    .plan-details{font-size:.9rem;color:#6c757d;margin-bottom:1rem}
+    .plan-pricing{display:flex;justify-content:space-between;align-items:center}
+    .original-price{text-decoration:line-through;color:#6c757d;font-size:.8rem}
+    .current-price{font-weight:600;color:#2c3e50}
+    .savings-badge{background:#dc3545;color:#fff;padding:.25rem .5rem;border-radius:12px;font-size:.7rem;font-weight:700}
+
+    .price-breakdown{border-top:1px solid #e9ecef;padding-top:1rem;margin-top:1rem}
+    .price-row{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.9rem;color:#495057}
+    .price-row.total{font-weight:700;font-size:1.1rem;color:#2c3e50;border-top:1px solid #e9ecef;padding-top:.5rem;margin-top:1rem}
+
+    .guarantee-info{background:rgba(104,188,113,.05);border:1px solid rgba(104,188,113,.2);border-radius:6px;padding:.75rem;margin-top:1rem;text-align:center}
+    .guarantee-badge{background:#68BC71;color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.5rem}
+    .guarantee-text{font-size:.8rem;color:#495057;font-weight:600}
+    .optional-label{color:#6c757d;font-size:.8rem;font-weight:400}
+
+    .footer-legal{max-width:1200px;margin:0 auto;padding:0 2rem 2rem;color:#6c757d;font-size:.85rem}
+    .footer-legal a{color:#2e7d32}
+
+    @media (max-width:768px){
+      .main-container{grid-template-columns:1fr;gap:2rem;padding:1rem}
+      .additional-services{grid-template-columns:1fr}
+      .payment-methods{grid-template-columns:1fr}
+      .card-row{grid-template-columns:1fr}
+      .footer-legal{padding:0 1rem 1rem}
+    }
+
+    /* изображения и кликабельные обёртки */
+    img{max-width:100%;height:auto;display:block}
+    .ag-imglink{display:inline-block;line-height:0}
+    .logo .ag-imglink img{height:28px;width:auto}
+    .service-icon .ag-imglink img{width:48px;height:48px;object-fit:contain;border-radius:8px}
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <div class="logo">
+      <a class="ag-imglink" href="https://adguard.com" target="_blank" rel="noopener">
+        <!-- официальный логотип AdGuard -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/AdGuard.svg" alt="AdGuard">
+      </a>
+      <!-- удалено лишнее текстовое "AdGuard" рядом с логотипом -->
+    </div>
+    <div>
+      <span>Уже зарегистрированы? </span>
+      <a href="#" class="auth-link">Войдите в AdGuard Account</a>
+    </div>
+  </div>
+</header>
+
+<div class="main-container">
+  <div class="checkout-form">
+    <!-- Инфо как в модальном окне: оферта/политика -->
+   
+
+    <!-- 1. Email -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Введите адрес электронной почты для AdGuard Account</h2>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ваш адрес электронной почты</label>
+        <input type="email" class="form-input" placeholder="name@example.com" required>
+      </div>
+      <p style="font-size:.8rem;color:#6c757d;margin-top:.5rem">
+        Вы сможете изменить настройки уведомлений для маркетинговой рассылки об услугах AdGuard в AdGuard Account.
+      </p>
+    </div>
+
+    <!-- 2. Промокод -->
+    <div class="form-section coupon-section">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Промокод <span class="optional-label">(необязательно)</span></h2>
+      </div>
+      <div class="coupon-input-group">
+        <input type="text" class="form-input" placeholder="Введите промокод" id="couponInput">
+        <button class="coupon-button" onclick="applyCoupon()">Применить</button>
+      </div>
+    </div>
+
+    <!-- 3. Дополнительные услуги -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Добавьте другие услуги <span class="optional-label">(необязательно)</span></h2>
+      </div>
+
+      <div class="additional-services">
+        <!-- AdGuard Ad Blocker (персональная лицензия) -->
+        <div class="service-card" onclick="toggleService('adblocker')" id="service-adblocker">
+          <div class="add-button">+</div>
+          <div class="service-icon">
+            <a class="ag-imglink" href="https://adguard.com/ru/adguard-browser-extension/overview.html" target="_blank" rel="noopener">
+              <img src="https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk" alt="AdGuard Ad Blocker">
+            </a>
+          </div>
+          <div class="service-name">AdGuard Ad Blocker — Персональная</div>
+          <div class="service-description">До 3 устройств. Блокировка рекламы и трекеров.</div>
+          <div class="service-price">за 79 ₽/мес.</div>
+        </div>
+
+        <!-- AdGuard DNS -->
+        <div class="service-card" onclick="toggleService('dns')" id="service-dns">
+          <div class="add-button">+</div>
+          <div class="service-icon">
+            <a class="ag-imglink" href="https://adguard-dns.io" target="_blank" rel="noopener">
+              <img src="https://adguard-dns.io/apple-touch-icon.png" alt="AdGuard DNS">
+            </a>
+          </div>
+          <div class="service-name">AdGuard DNS</div>
+          <div class="service-description">Приватный DNS с блокировкой рекламы и вредоносного ПО для всей сети.</div>
+          <div class="service-price">за 133 ₽/мес.</div>
+        </div>
+
+        <!-- AdGuard Mail -->
+        <div class="service-card" onclick="toggleService('mail')" id="service-mail">
+          <div class="add-button">+</div>
+          <div class="service-icon">
+            <a class="ag-imglink" href="https://adguard-mail.com" target="_blank" rel="noopener">
+              <img src="https://adguard-mail.com/apple-touch-icon.png" alt="AdGuard Mail">
+            </a>
+          </div>
+          <div class="service-name">AdGuard Mail</div>
+          <div class="service-description">Алиасы и временные адреса, чтобы скрывать личную почту и фильтровать спам.</div>
+          <div class="service-price">за 219 ₽/мес.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Способ оплаты -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Выберите способ оплаты</h2>
+      </div>
+
+      <div class="payment-methods">
+        <div class="payment-method active" onclick="selectPayment('card')">
+          <div class="payment-icon">💳</div>
+          <div class="payment-name">Карта</div>
+          <div class="payment-sub">Visa, Mastercard, Mir, T-Pay</div>
+        </div>
+        <div class="payment-method" onclick="selectPayment('sbp')">
+          <div class="payment-icon">🏦</div>
+          <div class="payment-name">СБП</div>
+          <div class="payment-sub">Быстрые платежи</div>
+        </div>
+        <div class="payment-method" onclick="selectPayment('crypto')">
+          <div class="payment-icon">🪙</div>
+          <div class="payment-name">Криптовалюта</div>
+          <div class="payment-sub">BTC, ETH, LTC, USDT…</div>
+        </div>
+      </div>
+
+      <div class="card-form" id="cardForm">
+        <div class="form-group">
+          <input type="text" class="form-input" placeholder="Номер карты" maxlength="19">
+        </div>
+        <div class="card-row">
+          <div class="form-group">
+            <input type="text" class="form-input" placeholder="ММ/ГГ" maxlength="5">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-input" placeholder="CVC" maxlength="3">
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-input" placeholder="Имя на карте">
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:1rem;background:#f8f9fa;border-radius:6px;font-size:.8rem;color:#495057">
+        <strong>Прямое списание средств</strong><br>
+        Подписка автоматически продлевается, если вы её не отмените. Мы сообщим о любых изменениях перед списанием. Отменить автопродление можно в личном кабинете.
+      </div>
+    </div>
+
+    <!-- Кнопка оформления заказа -->
+    <button class="checkout-button" onclick="processOrder()">Оформить заказ</button>
+  </div>
+
+  <!-- Сводка заказа -->
+  <div class="order-summary">
+    <h3 class="summary-title">Сведения о заказе</h3>
+
+    <div class="plan-info">
+      <div class="plan-badge">
+        <div class="plan-icon">🛡️</div>
+        <div class="plan-name">Годовая подписка</div>
+      </div>
+      <div class="plan-details">AdGuard PROXY (1 год)</div>
+      <div class="plan-pricing">
+        <div>
+          <div class="current-price" id="currentPrice">3 948 ₽</div>
+          <div class="original-price" id="originalPrice">11 864 ₽</div>
+        </div>
+        <div class="savings-badge" id="savingsBadge">Сэкономили 67%</div>
+      </div>
+    </div>
+
+    <div class="price-breakdown">
+      <div class="price-row">
+        <span>AdGuard PROXY (1 год):</span>
+        <span id="productPriceRow">11 864 ₽</span>
+      </div>
+      <div class="price-row" id="savedRow">
+        <span>Ваша скидка</span>
+        <span style="color:#dc3545" id="savedAmount">−7 916 ₽</span>
+      </div>
+      <div id="additionalServices"></div>
+      <div class="price-row total">
+        <span>Всего</span>
+        <span id="totalAmount">3 948 ₽</span>
+      </div>
+    </div>
+
+    <div class="guarantee-info">
+      <div class="guarantee-badge">30</div>
+      <div class="guarantee-text">ДНЕЙ <br>ГАРАНТИЯ ВОЗВРАТА СРЕДСТВ</div>
+    </div>
+  </div>
+</div>
+
+<!-- футер с повторами ссылок как «внизу» -->
+<div class="footer-legal">
+  Продолжая, вы принимаете
+  <a href="https://adguard.com/ru/offer.html" target="_blank" rel="noopener">Публичную оферту</a>
+  и
+  <a href="https://adguard.com/ru/privacy.html" target="_blank" rel="noopener">Политику конфиденциальности</a>.
+</div>
+
+<script>
+  // Базовый тариф (как в макете)
+  let basePrice = 3948;           // ₽
+  const originalPrice = 11864;    // ₽
+  const saved = originalPrice - basePrice;
+
+  // Годовые стоимости доп.услуг
+  // Ad Blocker Персональная: 79 ₽/мес → 948 ₽/год
+  // DNS: ~133 ₽/мес → 1 596 ₽/год
+  // Mail: 219 ₽/мес → 2 628 ₽/год
+  const servicesPrices = {
+    adblocker: 948,
+    dns: 1596,
+    mail: 2628
+  };
+
+  const servicesNames = {
+    adblocker: 'AdGuard Ad Blocker — Персональная (1 год)',
+    dns: 'AdGuard DNS (1 год)',
+    mail: 'AdGuard Mail (1 год)'
+  };
+
+  let selectedServices = new Set();
+
+  // Форматирование ввода карты
+  document.querySelector('input[placeholder="Номер карты"]').addEventListener('input', function(e){
+    let x = e.target.value.replace(/\s+/g,'').replace(/[^0-9]/g,'');
+    let matches = x.match(/\d{4,16}/g);
+    let match = (matches && matches[0]) || '';
+    let parts = [];
+    for (let i=0;i<match.length;i+=4) parts.push(match.substring(i,i+4));
+    e.target.value = parts.length ? parts.join(' ') : match;
+  });
+
+  // Форматирование срока действия
+  document.querySelector('input[placeholder="ММ/ГГ"]').addEventListener('input', function(e){
+    let x = e.target.value.replace(/\D/g,'');
+    x = x.replace(/(\d{2})(\d)/,'$1/$2');
+    e.target.value = x;
+  });
+
+  function selectPayment(method){
+    document.querySelectorAll('.payment-method').forEach(el=>el.classList.remove('active'));
+    event.target.closest('.payment-method').classList.add('active');
+    document.getElementById('cardForm').style.display = method==='card' ? 'block' : 'none';
+  }
+
+  function toggleService(serviceId){
+    const card = document.getElementById(`service-${serviceId}`);
+    const button = card.querySelector('.add-button');
+    if (selectedServices.has(serviceId)){
+      selectedServices.delete(serviceId);
+      card.classList.remove('selected');
+      button.textContent = '+';
+    } else {
+      selectedServices.add(serviceId);
+      card.classList.add('selected');
+      button.textContent = '✓';
+    }
+    updatePricing();
+  }
+
+  function rub(n){ return n.toLocaleString('ru-RU') + ' ₽'; }
+
+  function updatePricing(){
+    let addons = 0;
+    let html = '';
+    selectedServices.forEach(id=>{
+      const price = servicesPrices[id] || 0;
+      addons += price;
+      html += `
+        <div class="price-row">
+          <span>${servicesNames[id]}:</span>
+          <span>${rub(price)}</span>
+        </div>`;
+    });
+
+    const total = basePrice + addons;
+    document.getElementById('additionalServices').innerHTML = html;
+    document.getElementById('totalAmount').textContent = rub(total);
+    document.getElementById('currentPrice').textContent = rub(basePrice);
+    document.getElementById('originalPrice').textContent = rub(originalPrice);
+    document.getElementById('productPriceRow').textContent = rub(originalPrice);
+    document.getElementById('savedAmount').textContent = '−' + rub(saved);
+  }
+
+  function applyCoupon(){
+    const c = document.getElementById('couponInput').value.trim();
+    if (c) alert(`Промокод «${c}» применён!`);
+  }
+
+  function processOrder(){
+    alert('Заказ оформляется...');
+  }
+
+  // Init
+  updatePricing();
+</script>
+</body>
+</html>
